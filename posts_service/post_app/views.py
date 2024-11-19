@@ -9,7 +9,11 @@ from rest_framework.permissions import IsAuthenticated
 @api_view(['GET'])
 def root(request, format=None):
     return Response({
-        'All': "Thou",       
+        'All posts': request.build_absolute_uri(reverse('posts', args=[], kwargs={})),
     })
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def posts(request):
+    return Response({"info":"Authorized"})
