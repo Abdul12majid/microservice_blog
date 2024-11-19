@@ -1,10 +1,11 @@
 from django.shortcuts import render
 from django.urls import reverse
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import login, logout, authenticate
 from .serializers import LoginSerializer, SignUpSerializer
 from rest_framework import status
+from rest_framework.permissions import IsAuthenticated
 
 # Create your views here.
 @api_view(['GET'])
@@ -15,6 +16,7 @@ def root(request, format=None):
         'Get Token': request.build_absolute_uri(reverse('token_obtain_pair', args=[], kwargs={})),
         'Refresh Token': request.build_absolute_uri(reverse('token_refresh', args=[], kwargs={})),
         'Verify Token': request.build_absolute_uri(reverse('token_verify', args=[], kwargs={})),
+        'Test Token': request.build_absolute_uri(reverse('test_token', args=[], kwargs={})),
         
     })
 
@@ -45,3 +47,9 @@ def register(request):
 		}
 		return Response(data=response, status=status.HTTP_201_CREATED)
 	return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def test_token(request):
+	return Response({"info":"JWT auth working"})
