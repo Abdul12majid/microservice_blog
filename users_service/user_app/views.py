@@ -3,7 +3,7 @@ from django.urls import reverse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from django.contrib.auth import login, logout, authenticate
-from .serializers import LoginSerializer
+from .serializers import LoginSerializer, SignUpSerializer
 from rest_framework import status
 
 # Create your views here.
@@ -11,6 +11,7 @@ from rest_framework import status
 def root(request, format=None):
     return Response({
         'Login user': request.build_absolute_uri(reverse('login', args=[], kwargs={})),
+        'Register user': request.build_absolute_uri(reverse('register', args=[], kwargs={})),
         
     })
 
@@ -27,4 +28,17 @@ def login_user(request):
 		else:
 			return Response({'Info': 'Incorrect username or password'})
 
+	return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST', 'GET'])	
+def register(request):
+	serializer = SignUpSerializer(data=request.data)
+	if serializer.is_valid():
+		serializer.save()
+		response = {
+			"info":"Registeration successful",
+			"user info":serializer.data
+		}
+		return Response(data=response, status=status.HTTP_201_CREATED)
 	return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
