@@ -12,6 +12,9 @@ def root(request, format=None):
     return Response({
         'Login user': request.build_absolute_uri(reverse('login', args=[], kwargs={})),
         'Register user': request.build_absolute_uri(reverse('register', args=[], kwargs={})),
+        'Get Token': request.build_absolute_uri(reverse('token_obtain_pair', args=[], kwargs={})),
+        'Refresh Token': request.build_absolute_uri(reverse('token_refresh', args=[], kwargs={})),
+        'Verify Token': request.build_absolute_uri(reverse('token_verify', args=[], kwargs={})),
         
     })
 
