@@ -13,6 +13,7 @@ from .serializers import PostSerializer, PostCreateSerializer
 def root(request, format=None):
     return Response({
         'All posts': request.build_absolute_uri(reverse('list_posts', args=[], kwargs={})),
+        'Create post': request.build_absolute_uri(reverse('create_post', args=[], kwargs={})),
     })
 
 
@@ -37,3 +38,13 @@ def user_detail(request, user_id):
         return Response({"error": "User not found"}, status=404)
 
 """
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def create_post(request):
+    user_id = request.user.id
+    serializer = PostCreateSerializer(data=request.data, context={'owner_id': user_id})
+    if serializer.is_valid():
+        post = serializer.save()
+        return Response(PostSerializer(post).data, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
