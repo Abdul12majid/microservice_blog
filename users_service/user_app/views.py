@@ -6,6 +6,7 @@ from django.contrib.auth import login, logout, authenticate
 from .serializers import LoginSerializer, SignUpSerializer
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from django.contrib.auth.models import User
 
 # Create your views here.
 @api_view(['GET'])
@@ -53,3 +54,17 @@ def register(request):
 @permission_classes([IsAuthenticated])
 def test_token(request):
 	return Response({"info":"JWT auth working"})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_details(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email
+        }, status=status.HTTP_200_OK)
+    except User.DoesNotExist:
+        return Response({"error": "User not found"}, status=status.HTTP_404_NOT_FOUND)
