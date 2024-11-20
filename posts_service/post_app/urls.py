@@ -4,4 +4,5 @@ from django.urls import path
 urlpatterns = [
     path('', views.root, name="root"),
     path('all_posts/', views.posts, name="posts"),
+    path('api/users/<int:user_id>/', views.user_detail, name='user_detail'),
 ]
