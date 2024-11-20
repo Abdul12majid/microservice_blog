@@ -16,7 +16,7 @@ class Post(models.Model):
 	id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
 	title = models.CharField(max_length=200)
 	slug = models.SlugField(max_length=200, unique=True)
-	author = models.IntegerField(default=1)
+	owner_id = models.IntegerField(default=1)
 	content = models.TextField()
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
@@ -24,3 +24,6 @@ class Post(models.Model):
 	bookmarks = models.IntegerField(default=0)
 	categories = models.ForeignKey(Category, on_delete=models.CASCADE)
 	is_published = models.BooleanField(default=True)
+
+	def __str__(self):
+		return self.title

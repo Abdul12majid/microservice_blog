@@ -53,6 +53,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'posts_service.urls'
+USERS_SERVICE_URL = "http://127.0.0.1:8000"
+
 
 TEMPLATES = [
     {
